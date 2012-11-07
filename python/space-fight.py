@@ -2,6 +2,8 @@
 
 import random
 debug = False
+move = False
+N = 200
 
 def help():
     print "One Dimensional Space Fight"
@@ -14,15 +16,21 @@ def help():
     print "d - debug"
 
 def play():
-    hidden = random.randrange(1, 201, 1)
+    hidden = random.randrange(1, N+1, 1)
     global debug
+    global move
 
     while 1:
         if debug:
             print "Debug: ", hidden
+        if move:
+            hidden = hidden + random.randrange(-2, 3, 1)
+            if hidden < 1:
+                hidden = 1
+            if hidden > N:
+                hidden = N
 
         guess = raw_input("Guess: ")
-        #print guess
 
         if guess == 'x' or guess == 'q':
             print "Thank you for playing"
@@ -42,6 +50,10 @@ def play():
 
         if guess == 'd':
             debug = not debug
+            continue
+
+        if guess == 'm':
+            move = not move
             continue
 
         try:
