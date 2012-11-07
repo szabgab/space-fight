@@ -20,7 +20,9 @@ GAME:
 while (1) {
     my $hidden = 1 + int rand $N;
     my $count = 0;
+	my $hit;
     while (1) {
+		print "-" x 20, "\n";
         print "Please guess between 1 and $N :";
         if ($debug) {
             print " ($hidden) ";
@@ -33,10 +35,18 @@ while (1) {
 			help();
 			next;
         }
-        $count++;
         if ($guess eq 'x' or $guess eq 'q') {
             last GAME;
         }
+		if ($guess eq 't') {
+			if (defined $min) {
+				print "Best score: $min\n";
+				print "Worst score: $max\n";
+			} else {
+				print "No top scores have been recorded yet.\n";
+			}
+			next;
+		}
         if ($guess eq 'n') {
             last;
         }
@@ -63,6 +73,7 @@ while (1) {
 			help();
 			next;
         }
+        $count++;
         if ($guess < 1 or $guess > $N) {
             warn "You shot ($guess) in the outer space.\n";
         }
@@ -74,6 +85,7 @@ while (1) {
         }
         if ($guess == $hidden) {
             print "Heureka!\n";
+			$hit = 1;
             last;
         }
         if ($moving) {
@@ -89,12 +101,14 @@ while (1) {
             }
         }
     }
-    if (not defined $min) {
-        $min = $count;
-        $max = $count;
-    }
-    $min = $count < $min ? $count : $min;
-    $max = $count > $max ? $count : $max;
+	if ($hit) {
+		if (not defined $min) {
+			$min = $count;
+			$max = $count;
+		}
+		$min = $count < $min ? $count : $min;
+		$max = $count > $max ? $count : $max;
+	}
 }
 
 if (defined $min) {
@@ -110,6 +124,7 @@ q - quit
 h - help
 n - next game
 s - show target
+t - show top scores
 d - toggle debug mode
 m - toggle - allow object to move or not
 };
